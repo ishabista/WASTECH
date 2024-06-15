@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Uploaded Images</title>
+    <style>
+        /* Your CSS styles go here */
+        /* Sample CSS for image display */
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Uploaded Images</h1>
+    <div class="image-container" id="imageContainer">
+        <!-- Images will be dynamically inserted here -->
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageContainer = document.getElementById('imageContainer');
+
+            // Retrieve uploaded images from localStorage
+            let products = localStorage.getItem('products');
+            products = products ? JSON.parse(products) : [];
+
+            // Display uploaded images
+            products.forEach((product, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.classList.add('image-item');
+                imageItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <button class="delete-btn" onclick="deleteImage(${index})">&times;</button>
+                `;
+                imageContainer.appendChild(imageItem);
+            });
+        });
+
+        // Function to delete an uploaded image
+        function deleteImage(index) {
+            let products = localStorage.getItem('products');
+            products = products ? JSON.parse(products) : [];
+
+            // Remove the selected image from the array
+            products.splice(index, 1);
+
+            // Update localStorage with the modified array
+            localStorage.setItem('products', JSON.stringify(products));
+
+            // Update the displayed images
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+            products.forEach((product, idx) => {
+                const imageItem = document.createElement('div');
+                imageItem.classList.add('image-item');
+                imageItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <button class="delete-btn" onclick="deleteImage(${idx})">&times;</button>
+                `;
+                imageContainer.appendChild(imageItem);
+            });
+        }
+    </script>
+</body>
+</html>
